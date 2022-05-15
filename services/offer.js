@@ -25,7 +25,7 @@ class OfferService {
         }
     }
 
-    async getOfferById(id) {
+    async getById(id) {
         try {
             return await offerModel.findById(id)
         } catch (error) {
@@ -33,9 +33,9 @@ class OfferService {
         }
     }
 
-    async createOffer(data,recruiterId) {
+    async createOffer(data) {
         try {
-            return await offerModel.create({...data,authorId:recruiterId})
+            return await offerModel.create(data)
             
         } catch (error) {
             console.log(error)
@@ -67,35 +67,17 @@ class OfferService {
         }
     }
 
-    async deleteOffer(idOffer, idCreator, role) {
-        try{
-            const offer = await offerModel.findById(idOffer)
-            if(offer.authorId.toString() === idCreator.toString() || role === 3){
-                return await offerModel.findByIdAndDelete(idOffer)
-            }else{
-                return {
-                    success:false,
-                    error:true,
-                    message:"No tienes permisos para eliminar esta oferta"
-                }
-            }
-        }catch(error){
+    async deleteOffer(id) {
+        try {
+            return await offerModel.findByIdAndDelete(id)
+        } catch (error) {
             console.log(error)
         }
     }
 
-    async updateOffer(idOffer, data, idCreator, role) {
+    async updateOffer(id, data) {
         try {
-            const offer = await offerModel.findById(idOffer)
-            if (offer.authorId.toString() === idCreator.toString() || role === 3) {
-                return await offerModel.findByIdAndUpdate(idOffer, data, { new: true })
-            } else {
-                return {
-                    success: false,
-                    error: true,
-                    message: "No tienes permisos para actualizar esta oferta"
-                }
-            }
+            return await offerModel.findByIdAndUpdate(id, data, { new: true })
         } catch (error) {
             console.log(error)
         }
