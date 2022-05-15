@@ -9,7 +9,7 @@ class CompanyService{
         }
     }
 
-    async getCompanyById(id){
+    async getById(id){
         try {
             return await CompanyModel.findById(id)
         } catch (error) {
