@@ -12,6 +12,12 @@ function offers(app) {
         return res.json(resOffer)
     })
 
+    router.get("/:id", async (req, res) => {
+        const { id } = req.params
+        const resOffer = await offerServ.getOfferById(id)
+        return res.json(resOffer)
+    })
+
     router.get("/salary/:salary", async(req,res)=>{
         const {salary} = req.params
         const resOffer = await offerServ.getOfferForSalaryHigherThan(salary)
@@ -32,7 +38,7 @@ function offers(app) {
     })
 
     router.post("/", isRecruiter,async(req,res)=>{
-        const resOffer = await offerServ.createOffer(req.body)
+        const resOffer = await offerServ.createOffer(req.body,req.user.id)
         return res.json(resOffer)
     })
 
@@ -48,15 +54,24 @@ function offers(app) {
         return res.json(resOffer)
     })
 
-    router.put("/:id/:authorId",isTheCreator, async(req,res)=>{
-        const {body,params:{id}} = req
-        const resOffer = await offerServ.updateOffer(id,body)
+    router.put("/:idOffer/:author",isTheCreator, async(req,res)=>{
+        const {body,params:{idOffer},user:{id},user:{role}} = req
+        const resOffer = await offerServ.updateOffer(idOffer,body,id,role)
         return res.json(resOffer)
     })
 
-    router.delete("/:id/:authorId",isTheCreator, async(req,res)=>{
-        const {params:{id}} = req
-        const resOffer = await offerServ.deleteOffer(id)
+    //Modificar una oferta sólo si es el creador de la misma opción dos (sin el middleware, haciendo una consulta a la base de datos extra)
+    // router.put("/:idOffer", async(req,res)=>{
+    //     const {body,params:{idOffer}} = req
+    //     const idCreator = req.user.id
+        
+    //     const resOffer = await offerServ.updateOffer(idOffer,body,idCreator)
+    //     return res.json(resOffer)
+    // })
+
+    router.delete("/:idOffer/:author",isTheCreator, async(req,res)=>{
+        const {body,params:{idOffer},user:{id},user:{role}} = req
+        const resOffer = await offerServ.deleteOffer(idOffer,id,role)
         return res.json(resOffer)
     })
 }

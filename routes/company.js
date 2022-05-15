@@ -12,6 +12,12 @@ function companies(app) {
         return res.json(resCompanies)
     })
 
+    router.get("/:id", async (req, res) => {
+        const { id } = req.params
+        const resCompany = await companyServ.getCompanyById(id)
+        return res.json(resCompany)
+    })
+
     router.post("/", async(req,res)=>{
         const rescompany = await companyServ.createCompany(req.body)
         return res.json(rescompany)

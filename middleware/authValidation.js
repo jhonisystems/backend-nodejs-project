@@ -1,6 +1,10 @@
 const jwt = require('jsonwebtoken')
 const { jwtSecret } = require('../config')
 
+const OnlyAuthValidation = (req, res, next) => {
+    req.filter = "onlyAuth"
+    authValidation(req, res, next)
+}
 
 const isPostulant = (req, res, next) => {
     req.minRole = 1
@@ -88,4 +92,4 @@ const validateRole = (req, res, next) => {
     }
 }
   
-module.exports = { isPostulant, isRecruiter, isAdmin , isTheCreator }
+module.exports = { isPostulant, isRecruiter, isAdmin, isTheCreator, OnlyAuthValidation }
